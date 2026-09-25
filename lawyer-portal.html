@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WakeelAI — Lawyer Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#0f1f17;color:#fff;min-height:100vh}
+.center{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.box{background:#1a3d28;border:1px solid #2a5c3a;border-radius:16px;padding:36px;width:100%;max-width:400px;text-align:center}
+.logo{font-size:36px;margin-bottom:10px}
+h2{font-size:20px;color:#c9a84c;margin-bottom:6px}
+.sub{font-size:13px;color:#8aab96;margin-bottom:24px;line-height:1.6}
+input,textarea,select{width:100%;padding:11px 14px;background:#0f1f17;border:1.5px solid #2a5c3a;border-radius:9px;color:#fff;font-size:13px;margin-bottom:10px;outline:none;font-family:'Segoe UI',sans-serif;resize:vertical}
+input:focus,textarea:focus{border-color:#c9a84c}
+.btn{width:100%;padding:12px;background:#1a5c3a;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;margin-bottom:8px}
+.btn:hover{background:#2a7a50}
+.btn-gold{background:#c9a84c;color:#0f1f17}.btn-gold:hover{background:#d4b86a}
+.btn-sm{padding:8px 16px;font-size:12px;border:none;border-radius:7px;cursor:pointer;font-weight:600;transition:all .2s;width:auto}
+.err{color:#ff6b6b;font-size:12px;margin-top:6px}
+.success{color:#4ade80;font-size:12px;margin-top:6px}
+/* PORTAL */
+.portal{display:none;max-width:900px;margin:0 auto;padding:20px}
+.portal-header{background:#1a3d28;border:1px solid #2a5c3a;border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:gap}
+.portal-logo{font-size:16px;font-weight:700;color:#c9a84c}
+.lawyer-info{font-size:12px;color:#8aab96;text-align:right}
+.lawyer-name{font-size:14px;color:#fff;font-weight:600}
+.logout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:7px;cursor:pointer;font-size:11px}
+.plan-badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;margin-left:8px}
+.plan-premium{background:#1a2a5c;color:#60a5fa}
+.plan-basic{background:#1a3d28;color:#4ade80}
+.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.tab{padding:8px 16px;background:#1a3d28;border:1px solid #2a5c3a;border-radius:8px;color:#8aab96;cursor:pointer;font-size:13px;transition:all .2s}
+.tab.on{background:#1a5c3a;color:#fff;border-color:#1a5c3a}
+.section{display:none}.section.on{display:block}
+.card{background:#1a3d28;border:1px solid #2a5c3a;border-radius:12px;padding:18px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:600;color:#c9a84c;margin-bottom:12px}
+.result-box{background:#0f1f17;border:1px solid #2a5c3a;border-radius:10px;padding:16px;font-size:13px;line-height:1.8;color:#d4e6db;margin-top:14px;white-space:pre-wrap;display:none;max-height:500px;overflow-y:auto}
+.result-box.on{display:block}
+.section-lbl{font-size:11px;font-weight:600;color:#c9a84c;letter-spacing:.5px;text-transform:uppercase;margin:12px 0 6px;border-bottom:1px solid #2a5c3a;padding-bottom:6px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.info-item{background:#0f1f17;border-radius:8px;padding:10px 12px}
+.info-lbl{font-size:10px;color:#8aab96;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.info-val{font-size:13px;color:#fff;font-weight:500}
+.loading{display:none;text-align:center;padding:20px;color:#8aab96;font-size:13px}
+.loading.on{display:block}
+.upgrade-notice{background:linear-gradient(135deg,#1a2a5c,#0f1a3d);border:1px solid #2a3a7a;border-radius:12px;padding:20px;text-align:center;margin-top:14px}
+.upgrade-notice h3{color:#60a5fa;margin-bottom:8px}
+.upgrade-notice p{font-size:13px;color:#8aab96;margin-bottom:14px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="center" id="loginSection">
+  <div class="box">
+    <div class="logo">👨‍⚖️</div>
+    <h2>Lawyer Portal</h2>
+    <div class="sub">Enter your access code to login.<br>Contact WakeelAI support if you need a code.</div>
+    <input id="accessCode" placeholder="Enter your access code (e.g. LAW-2847)" onkeydown="if(event.key==='Enter')lawyerLogin()">
+    <button class="btn" onclick="lawyerLogin()">Login to Portal</button>
+    <div class="err" id="loginErr"></div>
+    <div style="margin-top:16px;font-size:12px;color:#8aab96">Don't have a code? <a href="/" style="color:#c9a84c">Contact WakeelAI</a></div>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div class="portal" id="portalSection">
+  <div class="portal-header">
+    <div class="portal-logo">⚖️ WakeelAI Lawyer Portal</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div>
+        <div class="lawyer-name" id="lawyerName">—</div>
+        <div class="lawyer-info" id="lawyerInfo">—</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" onclick="showTab('profile')">👤 My Profile</div>
+    <div class="tab" onclick="showTab('research')">🔬 Case Research</div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="section on" id="tab-profile">
+    <div class="card">
+      <div class="card-title">My Subscription</div>
+      <div class="info-grid" id="profileGrid"></div>
+      <div id="planDetails"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">How It Works</div>
+      <div style="font-size:13px;color:#8aab96;line-height:1.8">
+        <p style="margin-bottom:10px">🎯 <strong style="color:#fff">You get recommended</strong> — When a user's legal problem matches your specialty, WakeelAI recommends you by name and phone number.</p>
+        <p style="margin-bottom:10px">📞 <strong style="color:#fff">User contacts you directly</strong> — Users see your name, city, phone, and experience. They call you directly.</p>
+        <p style="margin-bottom:10px">🔬 <strong style="color:#fff">Case Research (Premium)</strong> — Upload case details and get AI-powered legal research, similar case patterns, and argument suggestions.</p>
+        <p>💰 <strong style="color:#fff">Renew monthly</strong> — Contact WakeelAI support on WhatsApp to renew your subscription each month.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESEARCH TOOL -->
+  <div class="section" id="tab-research">
+    <div id="researchContent"></div>
+  </div>
+</div>
+
+<script>
+var currentLawyer = null;
+var accessCode = '';
+
+function lawyerLogin() {
+  var code = document.getElementById('accessCode').value.trim();
+  if (!code) { document.getElementById('loginErr').textContent = 'Enter your access code'; return; }
+  document.getElementById('loginErr').textContent = 'Checking...';
+  fetch('/api/lawyer-login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ code }) })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      currentLawyer = data.lawyer;
+      accessCode = code;
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('portalSection').style.display = 'block';
+      renderPortal();
+    } else {
+      document.getElementById('loginErr').textContent = data.error || 'Invalid code';
+    }
+  })
+  .catch(() => { document.getElementById('loginErr').textContent = 'Connection error. Try again.'; });
+}
+
+function logout() {
+  currentLawyer = null; accessCode = '';
+  document.getElementById('loginSection').style.display = 'flex';
+  document.getElementById('portalSection').style.display = 'none';
+  document.getElementById('accessCode').value = '';
+  document.getElementById('loginErr').textContent = '';
+}
+
+function renderPortal() {
+  var l = currentLawyer;
+  var planLabel = l.plan === 'premium' ? '<span class="plan-badge plan-premium">PREMIUM</span>' : '<span class="plan-badge plan-basic">BASIC</span>';
+  document.getElementById('lawyerName').innerHTML = l.name + planLabel;
+  document.getElementById('lawyerInfo').textContent = l.city + ' · ' + (l.specialty || []).join(', ');
+  document.getElementById('profileGrid').innerHTML =
+    '<div class="info-item"><div class="info-lbl">Name</div><div class="info-val">' + l.name + '</div></div>' +
+    '<div class="info-item"><div class="info-lbl">City</div><div class="info-val">' + l.city + '</div></div>' +
+    '<div class="info-item"><div class="info-lbl">Plan</div><div class="info-val">' + l.plan.charAt(0).toUpperCase() + l.plan.slice(1) + '</div></div>' +
+    '<div class="info-item"><div class="info-lbl">Specialties</div><div class="info-val">' + (l.specialty || []).join(', ') + '</div></div>';
+  document.getElementById('planDetails').innerHTML = l.plan === 'premium'
+    ? '<div style="background:rgba(26,42,92,.5);border:1px solid #2a3a7a;border-radius:9px;padding:12px;font-size:12px;color:#60a5fa">✅ You have <strong>Premium access</strong> — Recommendations + Case Research Tool. Rs. 4,000/month.</div>'
+    : '<div style="background:rgba(26,61,40,.5);border:1px solid #2a5c3a;border-radius:9px;padding:12px;font-size:12px;color:#4ade80">✅ You have <strong>Basic access</strong> — Recommendations only. Rs. 2,000/month.</div>';
+  renderResearchTab();
+}
+
+function renderResearchTab() {
+  var l = currentLawyer;
+  if (l.plan !== 'premium') {
+    document.getElementById('researchContent').innerHTML = '<div class="upgrade-notice"><h3>🔬 Case Research Tool</h3><p>This feature is available for <strong>Premium subscribers</strong> only.<br>Upgrade to Premium (Rs. 4,000/month) to access AI-powered case research, legal argument building, and similar case analysis.</p><p style="color:#fff;font-size:13px">Contact WakeelAI support on WhatsApp to upgrade.</p></div>';
+    return;
+  }
+  document.getElementById('researchContent').innerHTML = `
+    <div class="card">
+      <div class="card-title">🔬 AI Case Research Tool</div>
+      <p style="font-size:13px;color:#8aab96;margin-bottom:14px;line-height:1.6">Describe your case in detail. WakeelAI will analyze it and provide relevant laws, strong arguments, counter-arguments, and practical advice for court.</p>
+      <div class="section-lbl">Case Type</div>
+      <select id="researchCat" style="width:100%;padding:11px 14px;background:#0f1f17;border:1.5px solid #2a5c3a;border-radius:9px;color:#fff;font-size:13px;margin-bottom:10px;outline:none">
+        <option value="criminal">Criminal Defence</option>
+        <option value="family">Family Law</option>
+        <option value="property">Property / Civil</option>
+        <option value="cyber">Cybercrime</option>
+        <option value="labor">Labor / Employment</option>
+        <option value="business">Business / Commercial</option>
+      </select>
+      <div class="section-lbl">Case Description</div>
+      <textarea id="caseDetails" rows="6" placeholder="Describe the case in detail — charges, facts, parties involved, evidence available, what the opposing side claims, and what outcome you are seeking..."></textarea>
+      <button class="btn btn-gold" onclick="runResearch()">⚡ Analyze Case & Build Arguments</button>
+      <div class="loading" id="researchLoading">🔍 Analyzing case and building legal arguments... This may take 15-30 seconds.</div>
+      <div class="result-box" id="researchResult"></div>
+      <button class="btn" id="copyResearch" style="display:none;margin-top:10px;background:#1a2a5c" onclick="copyResult()">📋 Copy Research</button>
+    </div>
+  `;
+}
+
+function runResearch() {
+  var details = document.getElementById('caseDetails').value.trim();
+  var cat = document.getElementById('researchCat').value;
+  if (details.length < 50) { alert('Please describe the case in more detail (at least 50 characters).'); return; }
+  document.getElementById('researchLoading').classList.add('on');
+  document.getElementById('researchResult').classList.remove('on');
+  document.getElementById('copyResearch').style.display = 'none';
+  var fullDetails = 'Case Category: ' + cat + '\n\n' + details;
+  fetch('/api/lawyer-research', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: accessCode, caseDetails: fullDetails })
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('researchLoading').classList.remove('on');
+    if (data.error) { alert('Error: ' + data.error); return; }
+    var text = (data.content || [{ text: '' }])[0].text || data.content;
+    if (typeof text !== 'string') text = JSON.stringify(text);
+    document.getElementById('researchResult').textContent = text;
+    document.getElementById('researchResult').classList.add('on');
+    document.getElementById('copyResearch').style.display = 'block';
+  })
+  .catch(() => {
+    document.getElementById('researchLoading').classList.remove('on');
+    alert('Connection error. Please try again.');
+  });
+}
+
+function copyResult() {
+  var text = document.getElementById('researchResult').textContent;
+  navigator.clipboard.writeText(text).then(() => alert('Research copied to clipboard!'));
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+  event.target.classList.add('on');
+  document.getElementById('tab-' + tab).classList.add('on');
+}
+</script>
+</body>
+</html>

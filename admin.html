@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WakeelAI Admin Panel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#0f1f17;color:#fff;min-height:100vh}
+.login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:#1a3d28;border:1px solid #2a5c3a;border-radius:16px;padding:40px;width:100%;max-width:380px;text-align:center}
+.logo{font-size:32px;margin-bottom:12px}
+h2{font-size:20px;margin-bottom:6px;color:#c9a84c}
+.sub{font-size:13px;color:#8aab96;margin-bottom:24px}
+input{width:100%;padding:11px 14px;background:#0f1f17;border:1.5px solid #2a5c3a;border-radius:9px;color:#fff;font-size:14px;margin-bottom:12px;outline:none;font-family:'Segoe UI',sans-serif}
+input:focus{border-color:#c9a84c}
+button{width:100%;padding:12px;background:#1a5c3a;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+button:hover{background:#2a7a50}
+.err{color:#ff6b6b;font-size:12px;margin-top:8px}
+/* DASHBOARD */
+.dash{display:none;padding:20px;max-width:1100px;margin:0 auto}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding:16px 20px;background:#1a3d28;border-radius:12px}
+.dash-logo{font-size:18px;font-weight:700;color:#c9a84c}
+.logout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:8px 18px;background:#1a3d28;border:1px solid #2a5c3a;border-radius:8px;color:#8aab96;cursor:pointer;font-size:13px;transition:all .2s}
+.tab.on{background:#1a5c3a;color:#fff;border-color:#1a5c3a}
+.section{display:none}.section.on{display:block}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:#1a3d28;border:1px solid #2a5c3a;border-radius:12px;padding:16px;text-align:center}
+.stat-num{font-size:28px;font-weight:700;color:#c9a84c}
+.stat-lbl{font-size:12px;color:#8aab96;margin-top:4px}
+.card{background:#1a3d28;border:1px solid #2a5c3a;border-radius:12px;padding:16px;margin-bottom:12px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:600;color:#c9a84c}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.badge-green{background:#1a5c3a;color:#4ade80}
+.badge-red{background:#3d1a1a;color:#ff6b6b}
+.badge-yellow{background:#3d3000;color:#fbbf24}
+.badge-blue{background:#1a2a5c;color:#60a5fa}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 10px;color:#8aab96;border-bottom:1px solid #2a5c3a;font-weight:500}
+td{padding:9px 10px;border-bottom:1px solid #1e3528;vertical-align:top}
+.action-btn{padding:5px 10px;border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;margin-right:4px;transition:all .2s}
+.btn-green{background:#1a5c3a;color:#fff}.btn-green:hover{background:#2a7a50}
+.btn-red{background:#5c1a1a;color:#fff}.btn-red:hover{background:#7a2a2a}
+.btn-blue{background:#1a2a5c;color:#fff}.btn-blue:hover{background:#2a3a7a}
+.btn-gold{background:#c9a84c;color:#0f1f17}.btn-gold:hover{background:#d4b86a}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+label{font-size:11px;color:#8aab96;text-transform:uppercase;letter-spacing:.5px}
+.form-input{padding:9px 12px;background:#0f1f17;border:1.5px solid #2a5c3a;border-radius:8px;color:#fff;font-size:13px;outline:none;font-family:'Segoe UI',sans-serif;width:100%}
+.form-input:focus{border-color:#c9a84c}
+select.form-input option{background:#0f1f17}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.on{display:flex}
+.modal{background:#1a3d28;border:1px solid #2a5c3a;border-radius:16px;padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:600;color:#c9a84c;margin-bottom:18px}
+.doc-content{background:#0f1f17;border:1px solid #2a5c3a;border-radius:8px;padding:14px;font-size:12px;line-height:1.7;color:#d4e6db;white-space:pre-wrap;max-height:400px;overflow-y:auto;font-family:monospace}
+.info-row{display:flex;gap:8px;margin-bottom:6px;font-size:12px}
+.info-lbl{color:#8aab96;min-width:80px}
+.info-val{color:#fff}
+.sep{height:1px;background:#2a5c3a;margin:14px 0}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginSection">
+  <div class="login-box">
+    <div class="logo">⚖️</div>
+    <h2>WakeelAI Admin</h2>
+    <div class="sub">Manage lawyers, documents & subscriptions</div>
+    <input type="password" id="adminPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()">
+    <button onclick="adminLogin()">Login to Admin Panel</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash" id="dashboard">
+  <div class="dash-header">
+    <div class="dash-logo">⚖️ WakeelAI Admin Panel</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><div class="stat-num" id="statLawyers">0</div><div class="stat-lbl">Active Lawyers</div></div>
+    <div class="stat-card"><div class="stat-num" id="statDocs">0</div><div class="stat-lbl">Document Requests</div></div>
+    <div class="stat-card"><div class="stat-num" id="statPending">0</div><div class="stat-lbl">Pending Docs</div></div>
+    <div class="stat-card"><div class="stat-num" id="statCompleted">0</div><div class="stat-lbl">Completed Docs</div></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" onclick="showTab('lawyers')">👨‍⚖️ Lawyers</div>
+    <div class="tab" onclick="showTab('documents')">📄 Documents</div>
+    <div class="tab" onclick="showTab('settings')">⚙️ Settings</div>
+  </div>
+
+  <!-- LAWYERS TAB -->
+  <div class="section on" id="tab-lawyers">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:14px;color:#8aab96">Subscribed Lawyers</div>
+      <button class="action-btn btn-gold" onclick="openAddLawyer()">+ Add New Lawyer</button>
+    </div>
+    <div id="lawyersList"></div>
+  </div>
+
+  <!-- DOCUMENTS TAB -->
+  <div class="section" id="tab-documents">
+    <div style="font-size:14px;color:#8aab96;margin-bottom:14px">Document Requests from Users</div>
+    <div id="docsList"></div>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div class="section" id="tab-settings">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Business Settings</div>
+      <div class="form-grid">
+        <div class="form-group"><label>JazzCash Number</label><input class="form-input" id="setJazzcash" placeholder="03001234567"></div>
+        <div class="form-group"><label>WhatsApp Number</label><input class="form-input" id="setWhatsapp" placeholder="03001234567"></div>
+        <div class="form-group"><label>New Admin Password</label><input class="form-input" type="password" id="setPassword" placeholder="Leave blank to keep current"></div>
+      </div>
+      <button class="action-btn btn-gold" style="margin-top:14px;width:100%;padding:10px" onclick="saveSettings()">Save Settings</button>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px">Pricing Guide</div>
+      <table>
+        <tr><th>Service</th><th>Price</th><th>Status</th></tr>
+        <tr><td>Basic Lawyer Subscription</td><td>Rs. 2,000/month</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td>Premium Lawyer Subscription</td><td>Rs. 4,000/month</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td>Legal Document Writing</td><td>Rs. 400–700</td><td><span class="badge badge-green">Active</span></td></tr>
+        <tr><td>Lawyer Case Research Tool</td><td>Premium only</td><td><span class="badge badge-blue">Premium</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT LAWYER MODAL -->
+<div class="modal-overlay" id="lawyerModal">
+  <div class="modal">
+    <div class="modal-title" id="lawyerModalTitle">Add New Lawyer</div>
+    <input type="hidden" id="lId">
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name</label><input class="form-input" id="lName" placeholder="Barrister Ahmed Khan"></div>
+      <div class="form-group"><label>City</label><input class="form-input" id="lCity" placeholder="Peshawar"></div>
+      <div class="form-group"><label>Phone</label><input class="form-input" id="lPhone" placeholder="0300-1234567"></div>
+      <div class="form-group"><label>Bar Number</label><input class="form-input" id="lBar" placeholder="KPK-1234"></div>
+      <div class="form-group"><label>Experience</label><input class="form-input" id="lExp" placeholder="8 years"></div>
+      <div class="form-group"><label>Plan</label>
+        <select class="form-input" id="lPlan">
+          <option value="basic">Basic (Rs. 2,000/month) — Recommendations only</option>
+          <option value="premium">Premium (Rs. 4,000/month) — Recommendations + Research Tool</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:10px"><label>Specialties (select all that apply)</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:5px;color:#fff;text-transform:none;font-size:13px"><input type="checkbox" value="criminal" class="spec-cb"> Criminal</label>
+        <label style="display:flex;align-items:center;gap:5px;color:#fff;text-transform:none;font-size:13px"><input type="checkbox" value="family" class="spec-cb"> Family</label>
+        <label style="display:flex;align-items:center;gap:5px;color:#fff;text-transform:none;font-size:13px"><input type="checkbox" value="property" class="spec-cb"> Property</label>
+        <label style="display:flex;align-items:center;gap:5px;color:#fff;text-transform:none;font-size:13px"><input type="checkbox" value="cyber" class="spec-cb"> Cybercrime</label>
+        <label style="display:flex;align-items:center;gap:5px;color:#fff;text-transform:none;font-size:13px"><input type="checkbox" value="labor" class="spec-cb"> Labor</label>
+        <label style="display:flex;align-items:center;gap:5px;color:#fff;text-transform:none;font-size:13px"><input type="checkbox" value="business" class="spec-cb"> Business</label>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div class="form-group">
+      <label>Access Code (auto-generated or custom)</label>
+      <div style="display:flex;gap:8px">
+        <input class="form-input" id="lCode" placeholder="LAW-XXXX" style="flex:1">
+        <button class="action-btn btn-blue" onclick="genCode()" style="white-space:nowrap">Generate</button>
+      </div>
+      <div style="font-size:11px;color:#8aab96;margin-top:4px">Share this code with the lawyer via WhatsApp after payment</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="action-btn btn-gold" style="flex:1;padding:10px" onclick="saveLawyer()">Save Lawyer</button>
+      <button class="action-btn btn-red" style="padding:10px;min-width:80px" onclick="closeModal('lawyerModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW DOCUMENT MODAL -->
+<div class="modal-overlay" id="docModal">
+  <div class="modal">
+    <div class="modal-title">📄 Document Request</div>
+    <div id="docModalContent"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <button class="action-btn btn-gold" id="generateDocBtn" style="flex:1;padding:10px" onclick="generateDocument()">⚡ Generate Document</button>
+      <button class="action-btn btn-green" id="approveDocBtn" style="flex:1;padding:10px" onclick="updateDocStatus('completed')">✅ Mark Completed</button>
+      <button class="action-btn btn-red" style="padding:10px;min-width:80px" onclick="closeModal('docModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var adminPass = '';
+var allData = {};
+var currentDocId = '';
+
+function adminLogin() {
+  var p = document.getElementById('adminPass').value.trim();
+  if (!p) { document.getElementById('loginErr').textContent = 'Enter password'; return; }
+  fetch('/api/admin-data', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: p }) })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) { document.getElementById('loginErr').textContent = 'Wrong password'; return; }
+    adminPass = p;
+    allData = data;
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    renderAll();
+  })
+  .catch(() => { document.getElementById('loginErr').textContent = 'Connection error'; });
+}
+
+function logout() {
+  adminPass = ''; allData = {};
+  document.getElementById('loginSection').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('adminPass').value = '';
+}
+
+function renderAll() {
+  var lawyers = allData.lawyers || [];
+  var docs = allData.documents || [];
+  document.getElementById('statLawyers').textContent = lawyers.filter(l => l.active).length;
+  document.getElementById('statDocs').textContent = docs.length;
+  document.getElementById('statPending').textContent = docs.filter(d => d.status === 'pending').length;
+  document.getElementById('statCompleted').textContent = docs.filter(d => d.status === 'completed').length;
+  renderLawyers();
+  renderDocs();
+  if (allData.admin) {
+    document.getElementById('setJazzcash').value = allData.admin.jazzcash || '';
+    document.getElementById('setWhatsapp').value = allData.admin.whatsapp || '';
+  }
+}
+
+function renderLawyers() {
+  var lawyers = allData.lawyers || [];
+  var html = lawyers.length === 0
+    ? '<div style="text-align:center;color:#8aab96;padding:30px">No lawyers yet. Click "Add New Lawyer" to add one.</div>'
+    : '<table><tr><th>Name</th><th>City</th><th>Specialty</th><th>Plan</th><th>Code</th><th>Status</th><th>Actions</th></tr>'
+      + lawyers.map(l => '<tr>'
+        + '<td><strong>' + l.name + '</strong><br><small style="color:#8aab96">' + l.bar_number + ' · ' + l.experience + '</small></td>'
+        + '<td>' + l.city + '</td>'
+        + '<td>' + (l.specialty || []).join(', ') + '</td>'
+        + '<td><span class="badge ' + (l.plan === 'premium' ? 'badge-blue' : 'badge-green') + '">' + l.plan + '</span></td>'
+        + '<td><code style="background:#0f1f17;padding:2px 6px;border-radius:4px;font-size:11px">' + l.access_code + '</code></td>'
+        + '<td><span class="badge ' + (l.active ? 'badge-green' : 'badge-red') + '">' + (l.active ? 'Active' : 'Inactive') + '</span></td>'
+        + '<td>'
+        + '<button class="action-btn btn-blue" onclick="editLawyer(\'' + l.id + '\')">Edit</button>'
+        + '<button class="action-btn ' + (l.active ? 'btn-red' : 'btn-green') + '" onclick="toggleLawyer(\'' + l.id + '\')">' + (l.active ? 'Deactivate' : 'Activate') + '</button>'
+        + '<button class="action-btn btn-red" onclick="deleteLawyer(\'' + l.id + '\')">Delete</button>'
+        + '</td></tr>'
+      ).join('') + '</table>';
+  document.getElementById('lawyersList').innerHTML = html;
+}
+
+function renderDocs() {
+  var docs = (allData.documents || []).slice().reverse();
+  var html = docs.length === 0
+    ? '<div style="text-align:center;color:#8aab96;padding:30px">No document requests yet.</div>'
+    : '<table><tr><th>ID</th><th>Type</th><th>Client</th><th>Phone</th><th>Price</th><th>Status</th><th>Actions</th></tr>'
+      + docs.map(d => '<tr>'
+        + '<td><code style="font-size:11px">' + d.id + '</code></td>'
+        + '<td>' + d.type + '</td>'
+        + '<td>' + d.name + '</td>'
+        + '<td>' + d.phone + '</td>'
+        + '<td>Rs. ' + d.price + '</td>'
+        + '<td><span class="badge ' + (d.status === 'completed' ? 'badge-green' : d.status === 'generating' ? 'badge-blue' : 'badge-yellow') + '">' + d.status + '</span></td>'
+        + '<td><button class="action-btn btn-gold" onclick="viewDoc(\'' + d.id + '\')">View / Generate</button></td>'
+        + '</tr>'
+      ).join('') + '</table>';
+  document.getElementById('docsList').innerHTML = html;
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => { t.classList.remove('on'); });
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+  event.target.classList.add('on');
+  document.getElementById('tab-' + tab).classList.add('on');
+}
+
+function genCode() {
+  document.getElementById('lCode').value = 'LAW-' + Math.random().toString(36).substr(2,4).toUpperCase();
+}
+
+function openAddLawyer() {
+  document.getElementById('lawyerModalTitle').textContent = 'Add New Lawyer';
+  document.getElementById('lId').value = 'LAW' + Date.now();
+  document.getElementById('lName').value = '';
+  document.getElementById('lCity').value = '';
+  document.getElementById('lPhone').value = '';
+  document.getElementById('lBar').value = '';
+  document.getElementById('lExp').value = '';
+  document.getElementById('lPlan').value = 'basic';
+  document.getElementById('lCode').value = '';
+  document.querySelectorAll('.spec-cb').forEach(c => c.checked = false);
+  genCode();
+  document.getElementById('lawyerModal').classList.add('on');
+}
+
+function editLawyer(id) {
+  var l = (allData.lawyers || []).find(x => x.id === id);
+  if (!l) return;
+  document.getElementById('lawyerModalTitle').textContent = 'Edit Lawyer';
+  document.getElementById('lId').value = l.id;
+  document.getElementById('lName').value = l.name;
+  document.getElementById('lCity').value = l.city;
+  document.getElementById('lPhone').value = l.phone;
+  document.getElementById('lBar').value = l.bar_number;
+  document.getElementById('lExp').value = l.experience;
+  document.getElementById('lPlan').value = l.plan;
+  document.getElementById('lCode').value = l.access_code;
+  document.querySelectorAll('.spec-cb').forEach(c => { c.checked = (l.specialty || []).includes(c.value); });
+  document.getElementById('lawyerModal').classList.add('on');
+}
+
+function saveLawyer() {
+  var specs = Array.from(document.querySelectorAll('.spec-cb:checked')).map(c => c.value);
+  if (!document.getElementById('lName').value || !document.getElementById('lPhone').value || specs.length === 0 || !document.getElementById('lCode').value) {
+    alert('Please fill name, phone, at least one specialty, and access code.'); return;
+  }
+  var lawyer = {
+    id: document.getElementById('lId').value,
+    name: document.getElementById('lName').value,
+    city: document.getElementById('lCity').value,
+    phone: document.getElementById('lPhone').value,
+    bar_number: document.getElementById('lBar').value,
+    experience: document.getElementById('lExp').value,
+    plan: document.getElementById('lPlan').value,
+    access_code: document.getElementById('lCode').value,
+    specialty: specs,
+    active: true
+  };
+  fetch('/api/admin-save-lawyer', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: adminPass, lawyer }) })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) {
+      closeModal('lawyerModal');
+      var lawyers = allData.lawyers || [];
+      var idx = lawyers.findIndex(l => l.id === lawyer.id);
+      if (idx >= 0) lawyers[idx] = lawyer; else lawyers.push(lawyer);
+      allData.lawyers = lawyers;
+      renderAll();
+      alert('Lawyer saved! Share code "' + lawyer.access_code + '" with them via WhatsApp after payment.');
+    } else alert('Error: ' + d.error);
+  });
+}
+
+function toggleLawyer(id) {
+  var lawyers = allData.lawyers || [];
+  var l = lawyers.find(x => x.id === id);
+  if (!l) return;
+  l.active = !l.active;
+  fetch('/api/admin-save-lawyer', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: adminPass, lawyer: l }) })
+  .then(r => r.json()).then(d => { if (d.success) { allData.lawyers = lawyers; renderAll(); } });
+}
+
+function deleteLawyer(id) {
+  if (!confirm('Delete this lawyer? They will lose access immediately.')) return;
+  fetch('/api/admin-delete-lawyer', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: adminPass, id }) })
+  .then(r => r.json()).then(d => { if (d.success) { allData.lawyers = (allData.lawyers || []).filter(l => l.id !== id); renderAll(); } });
+}
+
+function viewDoc(id) {
+  var doc = (allData.documents || []).find(d => d.id === id);
+  if (!doc) return;
+  currentDocId = id;
+  var html = '<div class="info-row"><span class="info-lbl">ID:</span><span class="info-val">' + doc.id + '</span></div>'
+    + '<div class="info-row"><span class="info-lbl">Type:</span><span class="info-val">' + doc.type + '</span></div>'
+    + '<div class="info-row"><span class="info-lbl">Client:</span><span class="info-val">' + doc.name + '</span></div>'
+    + '<div class="info-row"><span class="info-lbl">Phone:</span><span class="info-val">' + doc.phone + '</span></div>'
+    + '<div class="info-row"><span class="info-lbl">Price:</span><span class="info-val">Rs. ' + doc.price + '</span></div>'
+    + '<div class="info-row"><span class="info-lbl">Status:</span><span class="info-val">' + doc.status + '</span></div>'
+    + '<div class="sep"></div>'
+    + '<div style="font-size:11px;color:#8aab96;margin-bottom:6px">CLIENT DESCRIPTION:</div>'
+    + '<div class="doc-content">' + doc.description + '</div>';
+  if (doc.document) {
+    html += '<div style="font-size:11px;color:#8aab96;margin:10px 0 6px">GENERATED DOCUMENT:</div>'
+      + '<div class="doc-content">' + doc.document + '</div>'
+      + '<button class="action-btn btn-blue" style="margin-top:8px;width:100%;padding:8px" onclick="copyDoc()">📋 Copy Document</button>';
+  }
+  document.getElementById('docModalContent').innerHTML = html;
+  document.getElementById('generateDocBtn').style.display = doc.document ? 'none' : 'block';
+  document.getElementById('approveDocBtn').textContent = doc.status === 'completed' ? '✅ Completed' : '✅ Mark Completed';
+  document.getElementById('docModal').classList.add('on');
+}
+
+function generateDocument() {
+  var btn = document.getElementById('generateDocBtn');
+  btn.textContent = 'Generating...'; btn.disabled = true;
+  fetch('/api/generate-document', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: adminPass, id: currentDocId }) })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) {
+      var docs = allData.documents || [];
+      var doc = docs.find(x => x.id === currentDocId);
+      if (doc) { doc.document = d.document; doc.status = 'completed'; }
+      allData.documents = docs;
+      renderAll();
+      viewDoc(currentDocId);
+    } else { alert('Error: ' + d.error); btn.textContent = '⚡ Generate Document'; btn.disabled = false; }
+  });
+}
+
+function updateDocStatus(status) {
+  fetch('/api/admin-update-doc', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: adminPass, id: currentDocId, status }) })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) {
+      var docs = allData.documents || [];
+      var doc = docs.find(x => x.id === currentDocId);
+      if (doc) doc.status = status;
+      allData.documents = docs; renderAll(); closeModal('docModal');
+    }
+  });
+}
+
+function copyDoc() {
+  var doc = (allData.documents || []).find(d => d.id === currentDocId);
+  if (doc && doc.document) { navigator.clipboard.writeText(doc.document); alert('Document copied to clipboard!'); }
+}
+
+function saveSettings() {
+  alert('Settings saved! (Restart server to apply changes)');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+</script>
+</body>
+</html>

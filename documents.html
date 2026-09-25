@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WakeelAI — Legal Documents</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f7faf8;color:#1c2e24;min-height:100vh}
+header{background:#0f1f17;height:60px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e3528}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:#c9a84c;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-text{font-family:Georgia,serif;font-size:18px;color:#fff}
+.logo-text span{color:#c9a84c}
+.back-btn{color:#8aab96;font-size:12px;text-decoration:none;display:flex;align-items:center;gap:5px}
+.hero{background:linear-gradient(135deg,#0f1f17,#1a3d28);padding:36px 20px;text-align:center}
+.hero h1{font-family:Georgia,serif;font-size:clamp(22px,4vw,32px);color:#fff;margin-bottom:8px}
+.hero h1 span{color:#c9a84c}
+.hero p{color:#8aab96;font-size:13px;max-width:500px;margin:0 auto;line-height:1.75}
+.main{max-width:860px;margin:0 auto;padding:28px 16px 60px}
+.tabs{display:flex;gap:8px;margin-bottom:24px;background:#fff;border:1px solid #d4e6db;border-radius:10px;padding:5px}
+.tab{flex:1;padding:9px;text-align:center;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:#5a7566;transition:all .2s}
+.tab.on{background:#1a5c3a;color:#fff}
+.section{display:none}.section.on{display:block}
+.doc-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.doc-type{background:#fff;border:1.5px solid #d4e6db;border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+.doc-type:hover{border-color:#1a5c3a;background:#e8f5ee;transform:translateY(-2px)}
+.doc-type.selected{border-color:#1a5c3a;background:#1a5c3a}
+.doc-type.selected .dt-name{color:#fff}
+.doc-type.selected .dt-price{color:#c9a84c}
+.doc-type.selected .dt-desc{color:rgba(255,255,255,.7)}
+.dt-icon{font-size:26px;margin-bottom:8px}
+.dt-name{font-size:13px;font-weight:600;color:#1c2e24;margin-bottom:3px}
+.dt-price{font-size:12px;color:#1a5c3a;font-weight:600;margin-bottom:4px}
+.dt-desc{font-size:11px;color:#5a7566}
+.form-card{background:#fff;border:1.5px solid #d4e6db;border-radius:14px;padding:22px;margin-bottom:16px}
+.form-title{font-size:15px;font-weight:600;color:#1a5c3a;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.form-grid{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:5px}
+label{font-size:11px;font-weight:600;color:#5a7566;text-transform:uppercase;letter-spacing:.5px}
+input,textarea{padding:10px 13px;border:1.5px solid #d4e6db;border-radius:9px;font-family:'Segoe UI',sans-serif;font-size:13px;color:#1c2e24;outline:none;background:#fff;transition:border-color .2s}
+input:focus,textarea:focus{border-color:#1a5c3a}
+textarea{resize:vertical;min-height:100px}
+.price-summary{background:#e8f5ee;border:1px solid #d4e6db;border-radius:10px;padding:14px;margin-bottom:16px}
+.price-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.price-total{display:flex;justify-content:space-between;font-size:15px;font-weight:700;color:#1a5c3a;border-top:1px solid #d4e6db;padding-top:8px;margin-top:6px}
+.submit-btn{width:100%;padding:13px;background:#1a5c3a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+.submit-btn:hover{background:#2a7a50}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.payment-card{background:#fff;border:1.5px solid #c9a84c;border-radius:14px;padding:22px;margin-bottom:16px}
+.payment-title{font-size:15px;font-weight:600;color:#c9a84c;margin-bottom:14px}
+.payment-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;font-size:13px;line-height:1.6}
+.step-num{width:26px;height:26px;background:#1a5c3a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.jazzcash-num{font-size:20px;font-weight:700;color:#1a5c3a;background:#e8f5ee;padding:10px 16px;border-radius:8px;display:inline-block;margin:8px 0;letter-spacing:1px}
+.ref-num{font-size:16px;font-weight:700;color:#c9a84c;background:#fff8e6;padding:8px 14px;border-radius:8px;display:inline-block;margin:6px 0;letter-spacing:1px}
+.check-card{background:#fff;border:1.5px solid #d4e6db;border-radius:14px;padding:22px}
+.check-title{font-size:15px;font-weight:600;color:#1a5c3a;margin-bottom:14px}
+.result-box{background:#e8f5ee;border:1px solid #d4e6db;border-radius:10px;padding:16px;margin-top:14px;display:none;font-size:13px;line-height:1.8;white-space:pre-wrap}
+.result-box.on{display:block}
+.err-box{background:#fff0f0;border:1px solid #ffcccc;border-radius:10px;padding:12px 16px;margin-top:10px;font-size:12px;color:#cc2222;display:none}
+.err-box.on{display:block}
+.success-box{background:#e8f5ee;border:1px solid #1a5c3a;border-radius:10px;padding:14px 16px;margin-top:10px;font-size:13px;color:#1a5c3a;display:none;line-height:1.7}
+.success-box.on{display:block}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="logo-icon">⚖️</div><div class="logo-text">Wakeel<span>AI</span></div></div>
+  <a href="/" class="back-btn">← Back to WakeelAI</a>
+</header>
+<div class="hero">
+  <h1>Legal <span>Document Writing</span></h1>
+  <p>Professional legal documents written by AI, based on Pakistani law. FIR drafts, court applications, agreements, and more.</p>
+</div>
+<div class="main">
+  <div class="tabs">
+    <div class="tab on" onclick="showTab('request')">📝 Request a Document</div>
+    <div class="tab" onclick="showTab('check')">🔍 Check My Document</div>
+  </div>
+
+  <!-- REQUEST TAB -->
+  <div class="section on" id="tab-request">
+    <div class="form-card">
+      <div class="form-title">📋 Select Document Type</div>
+      <div class="doc-types" id="docTypes">
+        <div class="doc-type" onclick="selectDoc(this,'FIR Draft','400','Draft a formal FIR complaint for filing at a police station')">
+          <div class="dt-icon">🚔</div>
+          <div class="dt-name">FIR Draft</div>
+          <div class="dt-price">Rs. 400</div>
+          <div class="dt-desc">Complaint for police station</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Court Application','500','Formal application or petition for submission to court')">
+          <div class="dt-icon">🏛️</div>
+          <div class="dt-name">Court Application</div>
+          <div class="dt-price">Rs. 500</div>
+          <div class="dt-desc">Petition or application</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Legal Notice','500','Formal legal notice to send to another party')">
+          <div class="dt-icon">📨</div>
+          <div class="dt-name">Legal Notice</div>
+          <div class="dt-price">Rs. 500</div>
+          <div class="dt-desc">Send to opposing party</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Rental Agreement','600','Formal tenancy agreement between landlord and tenant')">
+          <div class="dt-icon">🏠</div>
+          <div class="dt-name">Rental Agreement</div>
+          <div class="dt-price">Rs. 600</div>
+          <div class="dt-desc">Landlord-tenant contract</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Divorce Application (Khula)','600','Khula application for Family Court submission')">
+          <div class="dt-icon">⚖️</div>
+          <div class="dt-name">Khula Application</div>
+          <div class="dt-price">Rs. 600</div>
+          <div class="dt-desc">Family Court submission</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Business Agreement','700','Contract or agreement for business transactions')">
+          <div class="dt-icon">📋</div>
+          <div class="dt-name">Business Agreement</div>
+          <div class="dt-price">Rs. 700</div>
+          <div class="dt-desc">Business contract</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Complaint Letter','400','Formal complaint to government authority or organization')">
+          <div class="dt-icon">✉️</div>
+          <div class="dt-name">Complaint Letter</div>
+          <div class="dt-price">Rs. 400</div>
+          <div class="dt-desc">To government authority</div>
+        </div>
+        <div class="doc-type" onclick="selectDoc(this,'Bail Application','500','Application for bail in criminal case')">
+          <div class="dt-icon">🔓</div>
+          <div class="dt-name">Bail Application</div>
+          <div class="dt-price">Rs. 500</div>
+          <div class="dt-desc">For criminal cases</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card" id="requestForm" style="display:none">
+      <div class="form-title" id="formTitle">📝 Document Details</div>
+      <div style="margin-bottom:14px;padding:10px 14px;background:#e8f5ee;border-radius:8px;font-size:12px;color:#1a5c3a">
+        <strong>Selected:</strong> <span id="selectedDocName">—</span> — <strong>Price: Rs. <span id="selectedDocPrice">—</span></strong>
+      </div>
+      <div class="form-grid" style="margin-bottom:12px">
+        <div class="form-group"><label>Your Full Name</label><input id="clientName" placeholder="Muhammad Ali Khan"></div>
+        <div class="form-group"><label>Phone Number</label><input id="clientPhone" placeholder="0300-1234567" type="tel"></div>
+        <div class="form-group"><label>Email (optional)</label><input id="clientEmail" placeholder="email@example.com" type="email"></div>
+        <div class="form-group"><label>Preferred Language</label>
+          <select id="docLang" style="padding:10px 13px;border:1.5px solid #d4e6db;border-radius:9px;font-size:13px;color:#1c2e24;outline:none;background:#fff">
+            <option value="English">English</option>
+            <option value="Urdu">Urdu</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Describe Your Situation in Detail</label>
+        <textarea id="clientDesc" rows="5" placeholder="Describe your full situation — what happened, dates, names of parties involved, what you want the document to say, any specific details that should be included..."></textarea>
+      </div>
+      <div class="price-summary">
+        <div class="price-row"><span>Document Type</span><span id="priceName">—</span></div>
+        <div class="price-row"><span>Turnaround</span><span>Within 24 hours</span></div>
+        <div class="price-row"><span>Delivery</span><span>WhatsApp & Email</span></div>
+        <div class="price-total"><span>Total</span><span>Rs. <span id="priceTotal">—</span></span></div>
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="submitRequest()">Submit Request & Proceed to Payment</button>
+      <div class="err-box" id="reqErr"></div>
+    </div>
+
+    <div class="payment-card" id="paymentCard" style="display:none">
+      <div class="payment-title">💳 Complete Payment</div>
+      <div class="payment-step">
+        <div class="step-num">1</div>
+        <div>
+          Message us on WhatsApp to complete payment of <strong>Rs. <span id="payAmount">—</span></strong>:<br>
+          <span class="jazzcash-num">+92 312 9299666</span>
+        </div>
+      </div>
+      <div class="payment-step">
+        <div class="step-num">2</div>
+        <div>
+          Send your reference number in the WhatsApp message:<br>
+          <span class="ref-num" id="refNum">—</span>
+        </div>
+      </div>
+      <div class="payment-step">
+        <div class="step-num">3</div>
+        <div>Our team will confirm payment and start preparing your document within a few hours.</div>
+      </div>
+      <div class="payment-step">
+        <div class="step-num">4</div>
+        <div>Your document will be ready within <strong>24 hours</strong>. We will send it to you on WhatsApp and check the status using your reference number below.</div>
+      </div>
+      <div style="background:#fff8e6;border:1px solid #c9a84c;border-radius:9px;padding:12px 14px;margin-top:10px;font-size:12px;color:#854F0B">
+        📋 Save your reference number: <strong id="refNumBottom">—</strong><br>Send this number on WhatsApp so we can find your request quickly.
+      </div>
+      <a id="waLink" href="" target="_blank" style="display:block;margin-top:12px;padding:12px;background:#25D366;color:#fff;border-radius:9px;text-align:center;font-weight:600;font-size:13px;text-decoration:none">
+        💬 Message us on WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- CHECK TAB -->
+  <div class="section" id="tab-check">
+    <div class="check-card">
+      <div class="check-title">🔍 Check Document Status</div>
+      <p style="font-size:13px;color:#5a7566;margin-bottom:16px;line-height:1.6">Enter your document ID (reference number) and the phone number you used when requesting.</p>
+      <div class="form-grid" style="margin-bottom:12px">
+        <div class="form-group"><label>Document Reference ID</label><input id="checkId" placeholder="DOC1234567890"></div>
+        <div class="form-group"><label>Your Phone Number</label><input id="checkPhone" placeholder="0300-1234567" type="tel"></div>
+      </div>
+      <button class="submit-btn" onclick="checkDocument()">Check Status</button>
+      <div class="err-box" id="checkErr"></div>
+      <div class="result-box" id="checkResult"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var selectedType = '', selectedPrice = '', selectedDesc = '';
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+  event.target.classList.add('on');
+  document.getElementById('tab-' + tab).classList.add('on');
+}
+
+function selectDoc(el, type, price, desc) {
+  document.querySelectorAll('.doc-type').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedType = type; selectedPrice = price; selectedDesc = desc;
+  document.getElementById('selectedDocName').textContent = type;
+  document.getElementById('selectedDocPrice').textContent = price;
+  document.getElementById('priceName').textContent = type;
+  document.getElementById('priceTotal').textContent = price;
+  document.getElementById('formTitle').textContent = '📝 ' + type + ' — Details';
+  document.getElementById('requestForm').style.display = 'block';
+  document.getElementById('requestForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function submitRequest() {
+  var name = document.getElementById('clientName').value.trim();
+  var phone = document.getElementById('clientPhone').value.trim();
+  var desc = document.getElementById('clientDesc').value.trim();
+  var err = document.getElementById('reqErr');
+  err.classList.remove('on');
+  if (!name) { err.textContent = 'Please enter your full name.'; err.classList.add('on'); return; }
+  if (!phone) { err.textContent = 'Please enter your phone number.'; err.classList.add('on'); return; }
+  if (desc.length < 30) { err.textContent = 'Please describe your situation in more detail (at least 30 characters).'; err.classList.add('on'); return; }
+  var btn = document.getElementById('submitBtn');
+  btn.textContent = 'Submitting...'; btn.disabled = true;
+  var fullDesc = selectedDesc + '\n\nLanguage: ' + document.getElementById('docLang').value + '\n\nClient description:\n' + desc;
+  fetch('/api/request-document', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: selectedType, description: fullDesc, name, phone, email: document.getElementById('clientEmail').value, price: selectedPrice })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('payAmount').textContent = selectedPrice;
+      document.getElementById('refNum').textContent = data.id;
+      document.getElementById('refNumBottom').textContent = data.id;
+      // WhatsApp link
+      document.getElementById('refNum').textContent = data.id;
+      document.getElementById('refNum').textContent = data.id;
+      document.getElementById('refNumBottom').textContent = data.id;
+      document.getElementById('payAmount').textContent = selectedPrice;
+      var waMsg = encodeURIComponent('Assalam o Alaikum! I want to pay Rs. ' + selectedPrice + ' for a ' + selectedType + '. My reference number is: ' + data.id);
+      document.getElementById('waLink').href = 'https://wa.me/923129299666?text=' + waMsg;
+      document.getElementById('requestForm').style.display = 'none';
+      document.getElementById('paymentCard').style.display = 'block';
+      document.getElementById('paymentCard').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      err.textContent = data.error || 'Submission failed. Try again.';
+      err.classList.add('on');
+      btn.textContent = 'Submit Request & Proceed to Payment';
+      btn.disabled = false;
+    }
+  })
+  .catch(() => {
+    err.textContent = 'Connection error. Please try again.';
+    err.classList.add('on');
+    btn.textContent = 'Submit Request & Proceed to Payment';
+    btn.disabled = false;
+  });
+}
+
+function checkDocument() {
+  var id = document.getElementById('checkId').value.trim();
+  var phone = document.getElementById('checkPhone').value.trim();
+  var err = document.getElementById('checkErr');
+  var result = document.getElementById('checkResult');
+  err.classList.remove('on'); result.classList.remove('on');
+  if (!id || !phone) { err.textContent = 'Please enter both document ID and phone number.'; err.classList.add('on'); return; }
+  fetch('/api/check-document', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, phone })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) { err.textContent = data.error; err.classList.add('on'); return; }
+    if (data.status === 'completed') {
+      result.innerHTML = '<strong style="color:#1a5c3a">✅ Your document is ready!</strong>\n\n' + data.document;
+      result.classList.add('on');
+    } else {
+      result.innerHTML = '<strong>Status: ' + data.status + '</strong>\n\n' + (data.message || 'Your document is being prepared.');
+      result.classList.add('on');
+    }
+  })
+  .catch(() => { err.textContent = 'Connection error. Try again.'; err.classList.add('on'); });
+}
+</script>
+</body>
+</html>
